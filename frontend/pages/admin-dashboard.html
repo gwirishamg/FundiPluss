@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - FundiPluss</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">
+                <i class="bi bi-tools"></i> FundiPluss Admin
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="admin-dashboard.html">Dashboard</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2">
+                <div class="dashboard-sidebar">
+                    <div class="text-center mb-4">
+                        <div class="professional-avatar mx-auto">
+                            <i class="bi bi-shield-lock"></i>
+                        </div>
+                        <h5 id="userName">Admin</h5>
+                        <p class="badge bg-danger">Administrator</p>
+                    </div>
+                    
+                    <ul class="nav flex-column nav-pills">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#" onclick="showSection('overview')">
+                                <i class="bi bi-speedometer2"></i> Overview
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" onclick="showSection('pending')">
+                                <i class="bi bi-clock-history"></i> Pending Approvals
+                                <span class="badge bg-danger float-end" id="pendingBadge">0</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" onclick="showSection('professionals')">
+                                <i class="bi bi-briefcase"></i> Professionals
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" onclick="showSection('customers')">
+                                <i class="bi bi-people"></i> Customers
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" onclick="showSection('requests')">
+                                <i class="bi bi-ticket"></i> All Requests
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" onclick="showSection('reports')">
+                                <i class="bi bi-graph-up"></i> Reports
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" onclick="showSection('settings')">
+                                <i class="bi bi-gear"></i> Settings
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-danger" href="#" onclick="logout()">
+                                <i class="bi bi-box-arrow-right"></i> Logout
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10">
+                <div class="dashboard-content">
+                    <!-- Overview Section -->
+                    <div id="overview" class="content-section">
+                        <h3 class="mb-4">Dashboard Overview</h3>
+                        
+                        <div class="row g-4 mb-4">
+                            <div class="col-md-3">
+                                <div class="card bg-primary text-white">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Total Users</h5>
+                                        <h2 class="display-4" id="totalUsers">0</h2>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card bg-success text-white">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Professionals</h5>
+                                        <h2 class="display-4" id="totalProfessionals">0</h2>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card bg-info text-white">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Customers</h5>
+                                        <h2 class="display-4" id="totalCustomers">0</h2>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card bg-warning text-white">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Pending Approvals</h5>
+                                        <h2 class="display-4" id="totalPending">0</h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5>Recent Registrations</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="recentUsers"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5>Recent Service Requests</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="recentRequests"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Pending Approvals Section -->
+                    <div id="pending" class="content-section" style="display: none;">
+                        <h3 class="mb-4">Pending Professional Approvals</h3>
+                        
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Trade</th>
+                                        <th>Experience</th>
+                                        <th>Location</th>
+                                        <th>Rate</th>
+                                        <th>Documents</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="pendingTable">
+                                    <tr><td colspan="7" class="text-center">Loading...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Professionals Section -->
+                    <div id="professionals" class="content-section" style="display: none;">
+                        <h3 class="mb-4">Manage Professionals</h3>
+                        
+                        <div class="mb-3">
+                            <input type="text" class="form-control" id="searchProfessionals" placeholder="Search professionals..." onkeyup="searchProfessionals()">
+                        </div>
+                        
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Trade</th>
+                                        <th>Phone</th>
+                                        <th>Email</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="professionalsTable">
+                                    <tr><td colspan="7" class="text-center">Loading...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Customers Section -->
+                    <div id="customers" class="content-section" style="display: none;">
+                        <h3 class="mb-4">Manage Customers</h3>
+                        
+                        <div class="mb-3">
+                            <input type="text" class="form-control" id="searchCustomers" placeholder="Search customers..." onkeyup="searchCustomers()">
+                        </div>
+                        
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Phone</th>
+                                        <th>Email</th>
+                                        <th>Joined</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="customersTable">
+                                    <tr><td colspan="7" class="text-center">Loading...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- All Requests Section -->
+                    <div id="requests" class="content-section" style="display: none;">
+                        <h3 class="mb-4">All Service Requests</h3>
+                        
+                        <div class="mb-3">
+                            <select class="form-select" id="filterRequests" onchange="filterRequests()">
+                                <option value="all">All Requests</option>
+                                <option value="pending">Pending</option>
+                                <option value="accepted">Accepted</option>
+                                <option value="completed">Completed</option>
+                                <option value="cancelled">Cancelled</option>
+                            </select>
+                        </div>
+                        
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Customer</th>
+                                        <th>Professional</th>
+                                        <th>Trade</th>
+                                        <th>Date</th>
+                                        <th>Status</th>
+                                        <th>Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="requestsTable">
+                                    <tr><td colspan="7" class="text-center">Loading...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Reports Section -->
+                    <div id="reports" class="content-section" style="display: none;">
+                        <h3 class="mb-4">Reports & Analytics</h3>
+                        
+                        <div class="row g-4 mb-4">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5>Platform Statistics</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="statsChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5>Popular Trades</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="tradesChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Export Data</h5>
+                            </div>
+                            <div class="card-body">
+                                <button class="btn btn-primary me-2" onclick="exportData('users')">
+                                    <i class="bi bi-download"></i> Export Users
+                                </button>
+                                <button class="btn btn-success me-2" onclick="exportData('professionals')">
+                                    <i class="bi bi-download"></i> Export Professionals
+                                </button>
+                                <button class="btn btn-info" onclick="exportData('requests')">
+                                    <i class="bi bi-download"></i> Export Requests
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Settings Section -->
+                    <div id="settings" class="content-section" style="display: none;">
+                        <h3 class="mb-4">System Settings</h3>
+                        
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5>Platform Settings</h5>
+                            </div>
+                            <div class="card-body">
+                                <form id="settingsForm">
+                                    <div class="mb-3">
+                                        <label for="platformName" class="form-label">Platform Name</label>
+                                        <input type="text" class="form-control" id="platformName" value="FundiPluss">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="adminEmail" class="form-label">Admin Email</label>
+                                        <input type="email" class="form-control" id="adminEmail" value="admin@fundipluss.com">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="commissionRate" class="form-label">Commission Rate (%)</label>
+                                        <input type="number" class="form-control" id="commissionRate" value="10" min="0" max="100">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Save Settings</button>
+                                </form>
+                            </div>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Database Management</h5>
+                            </div>
+                            <div class="card-body">
+                                <button class="btn btn-warning me-2" onclick="backupDatabase()">
+                                    <i class="bi bi-database"></i> Backup Database
+                                </button>
+                                <button class="btn btn-danger" onclick="clearCache()">
+                                    <i class="bi bi-trash"></i> Clear Cache
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Documents Modal -->
+    <div class="modal fade" id="documentsModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Professional Documents</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="documentsList">
+                    Loading...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../js/main.js"></script>
+    <script>
+        let allUsers = [];
+        let pendingProfessionals = [];
+        let allRequests = [];
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+            loadDashboardData();
+        });
+        
+        function checkAuth() {
+            const token = localStorage.getItem('token');
+            const user = JSON.parse(localStorage.getItem('user'));
+            
+            if (!token || !user) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            if (user.role !== 'admin') {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            document.getElementById('userName').textContent = user.firstName || 'Admin';
+        }
+        
+        async function loadDashboardData() {
+            try {
+                // Load all users
+                allUsers = await apiCall(`${API_URL}/admin/users`);
+                
+                // Load pending professionals
+                pendingProfessionals = await apiCall(`${API_URL}/admin/professionals/pending`);
+                
+                // Update counts
+                const professionals = allUsers.filter(u => u.role === 'professional');
+                const customers = allUsers.filter(u => u.role === 'customer');
+                
+                document.getElementById('totalUsers').textContent = allUsers.length;
+                document.getElementById('totalProfessionals').textContent = professionals.length;
+                document.getElementById('totalCustomers').textContent = customers.length;
+                document.getElementById('totalPending').textContent = pendingProfessionals.length;
+                document.getElementById('pendingBadge').textContent = pendingProfessionals.length;
+                
+                // Update tables
+                updatePendingTable();
+                updateProfessionalsTable(professionals);
+                updateCustomersTable(customers);
+                updateRecentUsers();
+                
+                // Load requests
+                // Note: You'll need to create this endpoint
+                // allRequests = await apiCall(`${API_URL}/admin/requests`);
+                // updateRequestsTable();
+                
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+            }
+        }
+        
+        function updatePendingTable() {
+            const tbody = document.getElementById('pendingTable');
+            
+            if (pendingProfessionals.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="text-center">No pending approvals</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = pendingProfessionals.map(p => `
+                <tr>
+                    <td>${p.firstName} ${p.lastName}</td>
+                    <td>${p.trade}</td>
+                    <td>${p.experience} years</td>
+                    <td>${p.location || 'N/A'}</td>
+                    <td>${formatCurrency(p.hourlyRate)}/hr</td>
+                    <td>
+                        <button class="btn btn-sm btn-info" onclick="viewDocuments(${p.id})">
+                            <i class="bi bi-file-text"></i> View
+                        </button>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-success" onclick="approveProfessional(${p.id}, true)">
+                            <i class="bi bi-check-circle"></i> Approve
+                        </button>
+                        <button class="btn btn-sm btn-danger" onclick="approveProfessional(${p.id}, false)">
+                            <i class="bi bi-x-circle"></i> Reject
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        function updateProfessionalsTable(professionals) {
+            const tbody = document.getElementById('professionalsTable');
+            
+            if (professionals.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="text-center">No professionals found</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = professionals.map(p => `
+                <tr>
+                    <td>${p.id}</td>
+                    <td>${p.firstName} ${p.lastName}</td>
+                    <td>${p.trade || 'N/A'}</td>
+                    <td>${p.phoneNumber}</td>
+                    <td>${p.email}</td>
+                    <td>
+                        <span class="badge ${p.isActive ? 'bg-success' : 'bg-danger'}">
+                            ${p.isActive ? 'Active' : 'Inactive'}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-warning" onclick="toggleUserStatus(${p.id})">
+                            <i class="bi bi-toggle-${p.isActive ? 'on' : 'off'}"></i> 
+                            ${p.isActive ? 'Deactivate' : 'Activate'}
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        function updateCustomersTable(customers) {
+            const tbody = document.getElementById('customersTable');
+            
+            if (customers.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="text-center">No customers found</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = customers.map(c => `
+                <tr>
+                    <td>${c.id}</td>
+                    <td>${c.firstName} ${c.lastName}</td>
+                    <td>${c.phoneNumber}</td>
+                    <td>${c.email}</td>
+                    <td>${formatDate(c.createdAt)}</td>
+                    <td>
+                        <span class="badge ${c.isActive ? 'bg-success' : 'bg-danger'}">
+                            ${c.isActive ? 'Active' : 'Inactive'}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-warning" onclick="toggleUserStatus(${c.id})">
+                            <i class="bi bi-toggle-${c.isActive ? 'on' : 'off'}"></i> 
+                            ${c.isActive ? 'Deactivate' : 'Activate'}
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        function updateRecentUsers() {
+            const recent = allUsers.slice(0, 5);
+            const container = document.getElementById('recentUsers');
+            
+            if (recent.length === 0) {
+                container.innerHTML = '<p class="text-muted">No recent users</p>';
+                return;
+            }
+            
+            container.innerHTML = recent.map(u => `
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div>
+                        <strong>${u.firstName} ${u.lastName}</strong>
+                        <br>
+                        <small class="text-muted">${u.role} - Joined ${formatDate(u.createdAt)}</small>
+                    </div>
+                    <span class="badge ${u.isActive ? 'bg-success' : 'bg-danger'}">
+                        ${u.isActive ? 'Active' : 'Inactive'}
+                    </span>
+                </div>
+            `).join('');
+        }
+        
+        async function approveProfessional(userId, approve) {
+            try {
+                await apiCall(`${API_URL}/admin/professionals/${userId}/approve`, 'PUT', { approve });
+                
+                showAlert(`Professional ${approve ? 'approved' : 'rejected'} successfully`, 'success');
+                
+                // Reload data
+                loadDashboardData();
+                
+            } catch (error) {
+                console.error('Error approving professional:', error);
+            }
+        }
+        
+        async function toggleUserStatus(userId) {
+            try {
+                await apiCall(`${API_URL}/admin/users/${userId}/toggle-status`, 'PUT');
+                
+                showAlert('User status updated', 'success');
+                
+                // Reload data
+                loadDashboardData();
+                
+            } catch (error) {
+                console.error('Error toggling user status:', error);
+            }
+        }
+        
+        async function viewDocuments(userId) {
+            try {
+                // Get professional details including documents
+                const professional = await apiCall(`${API_URL}/professionals/${userId}`);
+                
+                const modalBody = document.getElementById('documentsList');
+                
+                if (!professional.documents || professional.documents.length === 0) {
+                    modalBody.innerHTML = '<p class="text-muted">No documents uploaded</p>';
+                } else {
+                    modalBody.innerHTML = professional.documents.map(doc => `
+                        <div class="mb-3">
+                            <i class="bi bi-file-text"></i> 
+                            <a href="${API_URL}/../uploads/${doc.filename}" target="_blank">${doc.filename}</a>
+                            <br>
+                            <small class="text-muted">Uploaded: ${formatDate(doc.uploadedAt)}</small>
+                        </div>
+                    `).join('');
+                }
+                
+                new bootstrap.Modal(document.getElementById('documentsModal')).show();
+                
+            } catch (error) {
+                console.error('Error loading documents:', error);
+            }
+        }
+        
+        function searchProfessionals() {
+            const searchTerm = document.getElementById('searchProfessionals').value.toLowerCase();
+            const professionals = allUsers.filter(u => u.role === 'professional');
+            
+            const filtered = professionals.filter(p => 
+                p.firstName?.toLowerCase().includes(searchTerm) ||
+                p.lastName?.toLowerCase().includes(searchTerm) ||
+                p.email?.toLowerCase().includes(searchTerm) ||
+                p.phoneNumber?.includes(searchTerm)
+            );
+            
+            updateProfessionalsTable(filtered);
+        }
+        
+        function searchCustomers() {
+            const searchTerm = document.getElementById('searchCustomers').value.toLowerCase();
+            const customers = allUsers.filter(u => u.role === 'customer');
+            
+            const filtered = customers.filter(c => 
+                c.firstName?.toLowerCase().includes(searchTerm) ||
+                c.lastName?.toLowerCase().includes(searchTerm) ||
+                c.email?.toLowerCase().includes(searchTerm) ||
+                c.phoneNumber?.includes(searchTerm)
+            );
+            
+            updateCustomersTable(filtered);
+        }
+        
+        function filterRequests() {
+            const filter = document.getElementById('filterRequests').value;
+            // Implement filtering logic when requests endpoint is ready
+        }
+        
+        function showSection(section) {
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(el => el.style.display = 'none');
+            
+            // Show selected section
+            document.getElementById(section).style.display = 'block';
+            
+            // Update active nav link
+            document.querySelectorAll('.dashboard-sidebar .nav-link').forEach(link => link.classList.remove('active'));
+            event.target.closest('.nav-link').classList.add('active');
+            
+            // Load section-specific data
+            if (section === 'reports') {
+                loadCharts();
+            }
+        }
+        
+        function loadCharts() {
+            // Statistics Chart
+            const ctx1 = document.getElementById('statsChart').getContext('2d');
+            new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: ['Users', 'Professionals', 'Customers', 'Requests'],
+                    datasets: [{
+                        label: 'Platform Statistics',
+                        data: [
+                            allUsers.length,
+                            allUsers.filter(u => u.role === 'professional').length,
+                            allUsers.filter(u => u.role === 'customer').length,
+                            allRequests.length || 0
+                        ],
+                        backgroundColor: [
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+            
+            // Trades Chart
+            const ctx2 = document.getElementById('tradesChart').getContext('2d');
+            const professionals = allUsers.filter(u => u.role === 'professional');
+            const trades = {};
+            professionals.forEach(p => {
+                if (p.trade) {
+                    trades[p.trade] = (trades[p.trade] || 0) + 1;
+                }
+            });
+            
+            new Chart(ctx2, {
+                type: 'pie',
+                data: {
+                    labels: Object.keys(trades),
+                    datasets: [{
+                        data: Object.values(trades),
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                }
+            });
+        }
+        
+        function exportData(type) {
+            let data = [];
+            let filename = '';
+            
+            switch(type) {
+                case 'users':
+                    data = allUsers;
+                    filename = 'users.csv';
+                    break;
+                case 'professionals':
+                    data = allUsers.filter(u => u.role === 'professional');
+                    filename = 'professionals.csv';
+                    break;
+                case 'requests':
+                    data = allRequests;
+                    filename = 'requests.csv';
+                    break;
+            }
+            
+            // Convert to CSV
+            const headers = Object.keys(data[0] || {}).join(',');
+            const rows = data.map(row => Object.values(row).join(',')).join('\n');
+            const csv = headers + '\n' + rows;
+            
+            // Download
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+        }
+        
+        function backupDatabase() {
+            showAlert('Database backup started. You will be notified when complete.', 'info');
+            // Implement backup logic
+        }
+        
+        function clearCache() {
+            if (confirm('Are you sure you want to clear the cache?')) {
+                showAlert('Cache cleared successfully', 'success');
+            }
+        }
+    </script>
+</body>
+</html>

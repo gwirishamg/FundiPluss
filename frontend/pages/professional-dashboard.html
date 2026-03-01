@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Dashboard - FundiPluss</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">
+                <i class="bi bi-tools"></i> FundiPluss
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="professional-dashboard.html">Dashboard</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2">
+                <div class="dashboard-sidebar">
+                    <div class="text-center mb-4">
+                        <div class="professional-avatar mx-auto">
+                            <i class="bi bi-person-circle"></i>
+                        </div>
+                        <h5 id="userName">Loading...</h5>
+                        <p class="badge bg-success" id="approvalStatus">Pending Approval</p>
+                    </div>
+                    
+                    <ul class="nav flex-column nav-pills">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#" onclick="showSection('overview')">
+                                <i class="bi bi-speedometer2"></i> Overview
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" onclick="showSection('incoming')">
+                                <i class="bi bi-inbox"></i> Incoming Requests
+                                <span class="badge bg-danger float-end" id="incomingBadge">0</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" onclick="showSection('accepted')">
+                                <i class="bi bi-check-circle"></i> Accepted Jobs
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" onclick="showSection('completed')">
+                                <i class="bi bi-star"></i> Completed Jobs
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" onclick="showSection('history')">
+                                <i class="bi bi-clock-history"></i> History
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" onclick="showSection('profile')">
+                                <i class="bi bi-person"></i> My Profile
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" onclick="showSection('earnings')">
+                                <i class="bi bi-cash"></i> Earnings
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-danger" href="#" onclick="logout()">
+                                <i class="bi bi-box-arrow-right"></i> Logout
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10">
+                <div class="dashboard-content">
+                    <!-- Overview Section -->
+                    <div id="overview" class="content-section">
+                        <h3 class="mb-4">Dashboard Overview</h3>
+                        
+                        <div class="row g-4 mb-4">
+                            <div class="col-md-3">
+                                <div class="card bg-warning text-white">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Incoming</h5>
+                                        <h2 class="display-4" id="overviewIncoming">0</h2>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card bg-success text-white">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Accepted</h5>
+                                        <h2 class="display-4" id="overviewAccepted">0</h2>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card bg-info text-white">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Completed</h5>
+                                        <h2 class="display-4" id="overviewCompleted">0</h2>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card bg-primary text-white">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Total Earnings</h5>
+                                        <h4 id="overviewEarnings">KES 0</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <h4 class="mb-3">Recent Incoming Requests</h4>
+                        <div id="recentIncoming"></div>
+                    </div>
+                    
+                    <!-- Incoming Requests Section -->
+                    <div id="incoming" class="content-section" style="display: none;">
+                        <h3 class="mb-4">Incoming Requests</h3>
+                        <div id="incomingRequests"></div>
+                    </div>
+                    
+                    <!-- Accepted Jobs Section -->
+                    <div id="accepted" class="content-section" style="display: none;">
+                        <h3 class="mb-4">Accepted Jobs</h3>
+                        <div id="acceptedJobs"></div>
+                    </div>
+                    
+                    <!-- Completed Jobs Section -->
+                    <div id="completed" class="content-section" style="display: none;">
+                        <h3 class="mb-4">Completed Jobs</h3>
+                        <div id="completedJobs"></div>
+                    </div>
+                    
+                    <!-- History Section -->
+                    <div id="history" class="content-section" style="display: none;">
+                        <h3 class="mb-4">Job History</h3>
+                        <div id="historyJobs"></div>
+                    </div>
+                    
+                    <!-- Profile Section -->
+                    <div id="profile" class="content-section" style="display: none;">
+                        <h3 class="mb-4">Professional Profile</h3>
+                        
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <form id="profileForm" onsubmit="updateProfile(event)">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="firstName" class="form-label">First Name</label>
+                                            <input type="text" class="form-control" id="firstName" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="lastName" class="form-label">Last Name</label>
+                                            <input type="text" class="form-control" id="lastName" required>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="email" class="form-label">Email</label>
+                                        <input type="email" class="form-control" id="email" readonly>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="phoneNumber" class="form-label">Phone Number</label>
+                                        <input type="tel" class="form-control" id="phoneNumber" required>
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="trade" class="form-label">Trade</label>
+                                            <select class="form-select" id="trade" required>
+                                                <option value="plumber">Plumber</option>
+                                                <option value="electrician">Electrician</option>
+                                                <option value="mechanic">Mechanic</option>
+                                                <option value="phone_repair">Phone Repair</option>
+                                                <option value="carpenter">Carpenter</option>
+                                                <option value="painter">Painter</option>
+                                                <option value="other">Other</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="experience" class="form-label">Years Experience</label>
+                                            <input type="number" class="form-control" id="experience" min="0" required>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="hourlyRate" class="form-label">Hourly Rate (KES)</label>
+                                            <input type="number" class="form-control" id="hourlyRate" min="0" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="location" class="form-label">Service Location</label>
+                                            <input type="text" class="form-control" id="location" required>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="bio" class="form-label">Bio / Description</label>
+                                        <textarea class="form-control" id="bio" rows="3" required></textarea>
+                                    </div>
+                                    
+                                    <button type="submit" class="btn btn-primary">Update Profile</button>
+                                </form>
+                            </div>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>My Documents</h5>
+                            </div>
+                            <div class="card-body">
+                                <div id="documentsList"></div>
+                                <form id="documentUpload" enctype="multipart/form-data">
+                                    <div class="file-upload mt-3" onclick="document.getElementById('documents').click()">
+                                        <i class="bi bi-cloud-upload"></i>
+                                        <p>Click to upload additional documents</p>
+                                    </div>
+                                    <input type="file" class="d-none" id="documents" name="documents" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" onchange="uploadDocuments()">
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Earnings Section -->
+                    <div id="earnings" class="content-section" style="display: none;">
+                        <h3 class="mb-4">Earnings</h3>
+                        
+                        <div class="row g-4 mb-4">
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Total Earnings</h5>
+                                        <h3 id="totalEarnings">KES 0</h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">This Month</h5>
+                                        <h3 id="monthlyEarnings">KES 0</h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Jobs Completed</h5>
+                                        <h3 id="jobsCompleted">0</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <h4 class="mb-3">Earnings History</h4>
+                        <div id="earningsHistory"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Respond Modal -->
+    <div class="modal fade" id="respondModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Respond to Request</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="respondForm">
+                        <input type="hidden" id="respondRequestId">
+                        
+                        <div class="mb-3">
+                            <label for="respondStatus" class="form-label">Action</label>
+                            <select class="form-select" id="respondStatus" required>
+                                <option value="accepted">Accept Request</option>
+                                <option value="denied">Deny Request</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3" id="priceField">
+                            <label for="quotedPrice" class="form-label">Quoted Price (KES)</label>
+                            <input type="number" class="form-control" id="quotedPrice" min="0">
+                            <small class="text-muted">Leave blank to use your hourly rate</small>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="submitResponse()">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Complete Job Modal -->
+    <div class="modal fade" id="completeModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Complete Job</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="completeForm">
+                        <input type="hidden" id="completeRequestId">
+                        
+                        <div class="mb-3">
+                            <label for="finalPrice" class="form-label">Final Price (KES)</label>
+                            <input type="number" class="form-control" id="finalPrice" min="0" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-success" onclick="submitCompletion()">Mark Complete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/main.js"></script>
+    <script>
+        let incomingRequests = [];
+        let professionalDetails = null;
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+            loadUserData();
+            loadProfessionalDetails();
+            loadRequests();
+        });
+        
+        function checkAuth() {
+            const token = localStorage.getItem('token');
+            const user = JSON.parse(localStorage.getItem('user'));
+            
+            if (!token || !user) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            if (user.role !== 'professional') {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            document.getElementById('userName').textContent = `${user.firstName} ${user.lastName}`;
+        }
+        
+        async function loadUserData() {
+            try {
+                const user = await apiCall(`${API_URL}/auth/profile`);
+                
+                document.getElementById('firstName').value = user.firstName || '';
+                document.getElementById('lastName').value = user.lastName || '';
+                document.getElementById('email').value = user.email || '';
+                document.getElementById('phoneNumber').value = user.phoneNumber || '';
+                
+            } catch (error) {
+                console.error('Error loading user:', error);
+            }
+        }
+        
+        async function loadProfessionalDetails() {
+            try {
+                const user = JSON.parse(localStorage.getItem('user'));
+                const data = await apiCall(`${API_URL}/professionals/${user.id}`);
+                
+                professionalDetails = data;
+                
+                document.getElementById('trade').value = data.trade || '';
+                document.getElementById('experience').value = data.experience || '';
+                document.getElementById('hourlyRate').value = data.hourlyRate || '';
+                document.getElementById('location').value = data.location || '';
+                document.getElementById('bio').value = data.bio || '';
+                
+                // Update approval status
+                const statusEl = document.getElementById('approvalStatus');
+                if (data.isApproved) {
+                    statusEl.textContent = 'Approved';
+                    statusEl.className = 'badge bg-success';
+                } else {
+                    statusEl.textContent = 'Pending Approval';
+                    statusEl.className = 'badge bg-warning';
+                }
+                
+                // Load documents
+                if (data.documents && data.documents.length > 0) {
+                    document.getElementById('documentsList').innerHTML = data.documents.map(doc => `
+                        <div class="mb-2">
+                            <i class="bi bi-file-text"></i> ${doc.filename}
+                        </div>
+                    `).join('');
+                }
+                
+            } catch (error) {
+                console.error('Error loading professional details:', error);
+            }
+        }
+        
+        async function loadRequests() {
+            try {
+                // Load incoming requests
+                incomingRequests = await apiCall(`${API_URL}/requests/incoming`);
+                
+                // Load history
+                const history = await apiCall(`${API_URL}/requests/history');
+                
+                const accepted = history.filter(r => r.status === 'accepted');
+                const completed = history.filter(r => r.status === 'completed');
+                const others = history.filter(r => ['denied', 'cancelled'].includes(r.status));
+                
+                // Update counts
+                document.getElementById('overviewIncoming').textContent = incomingRequests.length;
+                document.getElementById('overviewAccepted').textContent = accepted.length;
+                document.getElementById('overviewCompleted').textContent = completed.length;
+                document.getElementById('incomingBadge').textContent = incomingRequests.length;
+                
+                // Calculate earnings
+                const totalEarnings = completed.reduce((sum, r) => sum + (r.finalPrice || r.quotedPrice || 0), 0);
+                document.getElementById('overviewEarnings').textContent = formatCurrency(totalEarnings);
+                document.getElementById('totalEarnings').textContent = formatCurrency(totalEarnings);
+                document.getElementById('jobsCompleted').textContent = completed.length;
+                
+                // Update all sections
+                updateRecentIncoming();
+                updateIncomingRequests();
+                updateAcceptedJobs(accepted);
+                updateCompletedJobs(completed);
+                updateHistory(others);
+                updateEarningsHistory(completed);
+                
+            } catch (error) {
+                console.error('Error loading requests:', error);
+            }
+        }
+        
+        function updateRecentIncoming() {
+            const recent = incomingRequests.slice(0, 5);
+            const container = document.getElementById('recentIncoming');
+            
+            if (recent.length === 0) {
+                container.innerHTML = '<p class="text-muted">No incoming requests</p>';
+                return;
+            }
+            
+            container.innerHTML = recent.map(req => `
+                <div class="request-card pending mb-3">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h5>${req.trade}</h5>
+                            <p><strong>Client:</strong> ${req.firstName} ${req.lastName}</p>
+                            <p><strong>Date:</strong> ${formatDate(req.preferredDate)}</p>
+                            <p><strong>Location:</strong> ${req.location}</p>
+                            <button class="btn btn-sm btn-primary" onclick="openRespondModal(${req.id})">Respond</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function updateIncomingRequests() {
+            const container = document.getElementById('incomingRequests');
+            
+            if (incomingRequests.length === 0) {
+                container.innerHTML = '<p class="text-muted">No incoming requests</p>';
+                return;
+            }
+            
+            container.innerHTML = incomingRequests.map(req => `
+                <div class="request-card pending mb-3">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h5>${req.trade}</h5>
+                            <p><strong>Client:</strong> ${req.firstName} ${req.lastName}</p>
+                            <p><strong>Phone:</strong> ${req.phoneNumber}</p>
+                            <p><strong>Date:</strong> ${formatDate(req.preferredDate)} ${req.preferredTime ? 'at ' + req.preferredTime : ''}</p>
+                            <p><strong>Location:</strong> ${req.location}</p>
+                            <p><strong>Description:</strong> ${req.description}</p>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <button class="btn btn-success mb-2" onclick="openRespondModal(${req.id})">
+                                <i class="bi bi-check-circle"></i> Respond
+                            </button>
+                            <br>
+                            <button class="btn btn-outline-primary" onclick="contactClient('${req.phoneNumber}')">
+                                <i class="bi bi-telephone"></i> Call
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function updateAcceptedJobs(accepted) {
+            const container = document.getElementById('acceptedJobs');
+            
+            if (accepted.length === 0) {
+                container.innerHTML = '<p class="text-muted">No accepted jobs</p>';
+                return;
+            }
+            
+            container.innerHTML = accepted.map(req => `
+                <div class="request-card accepted mb-3">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h5>${req.trade}</h5>
+                            <p><strong>Client:</strong> ${req.firstName} ${req.lastName}</p>
+                            <p><strong>Phone:</strong> ${req.phoneNumber}</p>
+                            <p><strong>Date:</strong> ${formatDate(req.preferredDate)}</p>
+                            <p><strong>Location:</strong> ${req.location}</p>
+                            <p><strong>Quoted Price:</strong> ${formatCurrency(req.quotedPrice)}</p>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <button class="btn btn-success" onclick="openCompleteModal(${req.id})">
+                                <i class="bi bi-check-all"></i> Mark Complete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function updateCompletedJobs(completed) {
+            const container = document.getElementById('completedJobs');
+            
+            if (completed.length === 0) {
+                container.innerHTML = '<p class="text-muted">No completed jobs</p>';
+                return;
+            }
+            
+            container.innerHTML = completed.map(req => `
+                <div class="request-card completed mb-3">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h5>${req.trade}</h5>
+                            <p><strong>Client:</strong> ${req.firstName} ${req.lastName}</p>
+                            <p><strong>Date:</strong> ${formatDate(req.preferredDate)}</p>
+                            <p><strong>Final Price:</strong> ${formatCurrency(req.finalPrice || req.quotedPrice)}</p>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function updateHistory(history) {
+            const container = document.getElementById('historyJobs');
+            
+            if (history.length === 0) {
+                container.innerHTML = '<p class="text-muted">No history</p>';
+                return;
+            }
+            
+            container.innerHTML = history.map(req => `
+                <div class="request-card mb-3">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h5>${req.trade}</h5>
+                            <p><strong>Client:</strong> ${req.firstName} ${req.lastName}</p>
+                            <p><strong>Date:</strong> ${formatDate(req.preferredDate)}</p>
+                            <p><strong>Status:</strong> <span class="status-badge status-${req.status}">${req.status}</span></p>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function updateEarningsHistory(completed) {
+            const container = document.getElementById('earningsHistory');
+            
+            if (completed.length === 0) {
+                container.innerHTML = '<p class="text-muted">No earnings yet</p>';
+                return;
+            }
+            
+            container.innerHTML = completed.map(req => `
+                <div class="card mb-2">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h6>${req.trade} - ${req.firstName} ${req.lastName}</h6>
+                                <small>${formatDate(req.completedAt || req.updatedAt)}</small>
+                            </div>
+                            <h5 class="text-success">${formatCurrency(req.finalPrice || req.quotedPrice)}</h5>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function showSection(section) {
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(el => el.style.display = 'none');
+            
+            // Show selected section
+            document.getElementById(section).style.display = 'block';
+            
+            // Update active nav link
+            document.querySelectorAll('.dashboard-sidebar .nav-link').forEach(link => link.classList.remove('active'));
+            event.target.closest('.nav-link').classList.add('active');
+        }
+        
+        function openRespondModal(requestId) {
+            const request = incomingRequests.find(r => r.id === requestId);
+            if (!request) return;
+            
+            document.getElementById('respondRequestId').value = requestId;
+            
+            // Show/hide price field based on status
+            document.getElementById('respondStatus').addEventListener('change', function() {
+                document.getElementById('priceField').style.display = 
+                    this.value === 'accepted' ? 'block' : 'none';
+            });
+            
+            new bootstrap.Modal(document.getElementById('respondModal')).show();
+        }
+        
+        async function submitResponse() {
+            const requestId = document.getElementById('respondRequestId').value;
+            const status = document.getElementById('respondStatus').value;
+            const quotedPrice = document.getElementById('quotedPrice').value;
+            
+            try {
+                await apiCall(`${API_URL}/requests/${requestId}/respond`, 'PUT', {
+                    status,
+                    quotedPrice: quotedPrice || null
+                });
+                
+                bootstrap.Modal.getInstance(document.getElementById('respondModal')).hide();
+                showAlert(`Request ${status} successfully`, 'success');
+                
+                // Reload requests
+                loadRequests();
+                
+            } catch (error) {
+                console.error('Error responding to request:', error);
+            }
+        }
+        
+        function openCompleteModal(requestId) {
+            document.getElementById('completeRequestId').value = requestId;
+            new bootstrap.Modal(document.getElementById('completeModal')).show();
+        }
+        
+        async function submitCompletion() {
+            const requestId = document.getElementById('completeRequestId').value;
+            const finalPrice = document.getElementById('finalPrice').value;
+            
+            try {
+                await apiCall(`${API_URL}/requests/${requestId}/complete`, 'PUT', {
+                    finalPrice
+                });
+                
+                bootstrap.Modal.getInstance(document.getElementById('completeModal')).hide();
+                showAlert('Job marked as completed', 'success');
+                
+                // Reload requests
+                loadRequests();
+                
+            } catch (error) {
+                console.error('Error completing job:', error);
+            }
+        }
+        
+        async function updateProfile(event) {
+            event.preventDefault();
+            
+            const profileData = {
+                firstName: document.getElementById('firstName').value,
+                lastName: document.getElementById('lastName').value,
+                phoneNumber: document.getElementById('phoneNumber').value,
+                trade: document.getElementById('trade').value,
+                experience: document.getElementById('experience').value,
+                hourlyRate: document.getElementById('hourlyRate').value,
+                location: document.getElementById('location').value,
+                bio: document.getElementById('bio').value
+            };
+            
+            try {
+                // Update user profile
+                await apiCall(`${API_URL}/auth/profile`, 'PUT', profileData);
+                
+                // Update professional details
+                await apiCall(`${API_URL}/professionals/profile`, 'PUT', profileData);
+                
+                showAlert('Profile updated successfully', 'success');
+                
+                // Update local storage
+                const user = JSON.parse(localStorage.getItem('user'));
+                user.firstName = profileData.firstName;
+                user.lastName = profileData.lastName;
+                localStorage.setItem('user', JSON.stringify(user));
+                
+            } catch (error) {
+                console.error('Error updating profile:', error);
+            }
+        }
+        
+        async function uploadDocuments() {
+            const files = document.getElementById('documents').files;
+            if (files.length === 0) return;
+            
+            const formData = new FormData();
+            for (let file of files) {
+                formData.append('documents', file);
+            }
+            
+            try {
+                await apiCall(`${API_URL}/professionals/documents`, 'POST', formData, true);
+                showAlert('Documents uploaded successfully', 'success');
+                loadProfessionalDetails();
+            } catch (error) {
+                console.error('Error uploading documents:', error);
+            }
+        }
+        
+        function contactClient(phone) {
+            window.location.href = `tel:${phone}`;
+        }
+    </script>
+</body>
+</html>
